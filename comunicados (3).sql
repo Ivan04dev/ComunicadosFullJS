@@ -56,6 +56,12 @@ CREATE TABLE `atc_reportelectura` (
 
 -- --------------------------------------------------------
 
+ALTER TABLE `atc_reportelectura`
+ADD CONSTRAINT `fk_reporte_lectura`
+FOREIGN KEY (`IDLECTURA`) REFERENCES `atc_lectura` (`ID`)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
 --
 -- Estructura de tabla para la tabla `atc_staff`
 --
