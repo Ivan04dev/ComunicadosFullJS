@@ -1,0 +1,93 @@
+// Función para manejar la selección de todas las ciudades de una región
+const handleRegionCheckboxChange = (event) => {
+  const region = event.target.value;
+  const citiesInRegion = groupedCities[divisionActual][region];
+  const updatedSelectedCities = [...selectedCities];
+
+  // Si el checkbox de la región está marcado, añadir todas las ciudades de la región
+  if (event.target.checked) {
+    citiesInRegion.forEach(city => {
+      if (!updatedSelectedCities.includes(city)) {
+        updatedSelectedCities.push(city);
+      }
+    });
+  } else {
+    // Si el checkbox de la región está desmarcado, remover todas las ciudades de la región
+    citiesInRegion.forEach(city => {
+      updatedSelectedCities = updatedSelectedCities.filter(selectedCity => selectedCity !== city);
+    });
+  }
+  setSelectedCities(updatedSelectedCities);
+};
+
+// Función para manejar la selección de todas las regiones y ciudades de una división
+const handleDivisionCheckboxChange = (event) => {
+  const division = event.target.value;
+  const regionsInDivision = Object.keys(groupedCities[division]);
+
+  const updatedSelectedCities = [...selectedCities];
+
+  // Si el checkbox de la división está marcado, añadir todas las ciudades de todas las regiones
+  if (event.target.checked) {
+    regionsInDivision.forEach(region => {
+      groupedCities[division][region].forEach(city => {
+        if (!updatedSelectedCities.includes(city)) {
+          updatedSelectedCities.push(city);
+        }
+      });
+    });
+  } else {
+    // Si el checkbox de la división está desmarcado, remover todas las ciudades de todas las regiones
+    regionsInDivision.forEach(region => {
+      groupedCities[division][region].forEach(city => {
+        updatedSelectedCities = updatedSelectedCities.filter(selectedCity => selectedCity !== city);
+      });
+    });
+  }
+
+  setSelectedCities(updatedSelectedCities);
+};
+
+{/* Renderizar cada división */}
+{Object.keys(groupedCities).map((division, divisionIndex) => (
+  <div className="mt-2" key={divisionIndex}>
+    <h3>
+      <input
+        type="checkbox"
+        value={division}
+        onChange={handleDivisionCheckboxChange}
+      /> {' '}
+      {division}
+    </h3>
+    {/* Renderizar una tabla para cada división */}
+    <div className="row mt-2">
+      {/* Renderizar cada región en columnas */}
+      {Object.keys(groupedCities[division]).map((region, regionIndex) => (
+        <div className="col-md mt-2" key={regionIndex} >
+          <h4 className="col-md mt-2">
+            <input
+              type="checkbox"
+              value={region}
+              onChange={handleRegionCheckboxChange}
+            /> {' '}
+            {region}
+          </h4>
+          {/* Renderizar cada ciudad dentro de la región correspondiente */}
+          <div className="col-md mt-2">
+            {groupedCities[division][region].map((city, cityIndex) => (
+              <div className="col-md mt-2" key={cityIndex}>
+                <input
+                  type="checkbox"
+                  value={city}
+                  checked={selectedCities.includes(city)}
+                  onChange={handleCityCheckboxChange}
+                /> {' '}
+                {city}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+))}
